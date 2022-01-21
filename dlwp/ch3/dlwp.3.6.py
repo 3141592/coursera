@@ -7,12 +7,14 @@ from tensorflow import keras
 # Listing 3.22 A Dense layer implemented as a Layer subclass
 class SimpleDense(keras.layers.Layer):
     def __init__(self, units, activation=None):
+        print("In __init__")
         super().__init__()
         self.units = units
         self.activation = activation
 
     # weight creation takes place in the build() method
     def build(self, input_shape):
+        print("In build()")
         input_dim = input_shape[-1]
 
         # add_weight is a shortcut method for creating weights.
@@ -23,6 +25,7 @@ class SimpleDense(keras.layers.Layer):
 
     # Define the forward pass computation in the call() method
     def call(self, inputs):
+        print("In call()")
         print(inputs)
         print(self.W)
         y = tf.matmul(inputs, self.W) + self.b
