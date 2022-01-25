@@ -121,7 +121,7 @@ model.compile(optimizer="rmsprop",
         metrics=["accuracy"])
 model.fit(x_train,
         y_train,
-        epochs=9,
+        epochs=10,
         batch_size=512)
 results = model.evaluate(x_test, y_test)
 print(f"results: {results}")
@@ -135,4 +135,72 @@ print(f"Random hits_array.mean(): {hits_array.mean()}")
 
 
 # 4.2.5 Generating predictions on new data
+predictions = model.predict(x_test)
+print(f"predictions[0].shape: {predictions[0].shape}")
+print(f"np.sum(predictions[0]): {np.sum(predictions[0])}")
+print(f"np.argmax(predictions[0]): {np.argmax(predictions[0])}")
+print(f"predictions[0]: {predictions[0]}")
+
+# 4.2.6 A different way to handle the labels and loss
+y_train = np.array(train_labels)
+y_test = np.array(test_labels)
+
+model.compile(optimizer="rmsprop",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"])
+model.fit(x_train,
+        y_train,
+        epochs=10,
+        batch_size=512)
+results = model.evaluate(x_test, y_test)
+print(f"results: {results}")
+
+# 4.2.7 The importance of having sufficiently large intermediate layers
+# Listing 4.22 A model with an information bottleneck
+model = keras.Sequential([
+    layers.Dense(64, activation="relu"),
+    layers.Dense(4, activation="relu"),
+    layers.Dense(46, activation="softmax")
+    ])
+model.compile(optimizer="rmsprop",
+        loss="categorical_crossentropy",
+        metrics=["accuracy"])
+model.fit(partial_x_train,
+        partial_y_train,
+        epochs=20,
+        batch_size=512,
+        validation_data=(x_val, y_val))
+
+# Listing 4.19 Printing the training and validation loss
+import matplotlib.pyplot as plt
+history_dict = history.history
+loss_values = history_dict["loss"]
+val_loss_values = history_dict["val_loss"]
+epochs = range(1, len(loss_values) + 1)
+plt.plot(epochs, loss_values, "bo", label="Trn loss")
+plt.plot(epochs, val_loss_values, "b", label="Val loss")
+plt.title("Trn and Val Loss")
+plt.xlabel("Epochs")
+plt.ylabel("loss")
+plt.legend()
+#plt.show()
+
+# Listing 4.20 Plotting the training and validation accuracy
+acc = history_dict["accuracy"]
+#acc = history_dict["categorical_accuracy"]
+val_acc = history_dict["val_accuracy"]
+#val_acc = history_dict["val_categorical_accuracy"]
+epochs = range(1, len(loss_values) + 1)
+plt.plot(epochs, acc, "go", label="Trn acc")
+plt.plot(epochs, val_acc, "g", label="Val acc")
+plt.title("Trn and Val Accuracy")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.show()
+
+
+
+
+
 
