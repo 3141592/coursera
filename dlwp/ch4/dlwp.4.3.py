@@ -147,4 +147,8 @@ test_mae_score: 2.5997469425201416
 
 """
 
+# 4.3.5 Generating predictions on new data
+predictions = model.predict(test_data)
+print(f"predictions[0]: {predictions[0]}")
+
 
